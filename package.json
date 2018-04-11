@@ -1,0 +1,25 @@
+{
+  "name": "reclone",
+  "version": "1.0.0",
+  "description": "reddit clone with as much functionality as I know of",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SupremeThrone/reclone.git"
+  },
+  "keywords": [
+    "clone"
+  ],
+  "author": "Tomas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SupremeThrone/reclone/issues"
+  },
+  "homepage": "https://github.com/SupremeThrone/reclone#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
