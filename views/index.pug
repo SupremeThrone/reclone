@@ -1,8 +1,11 @@
 doctype html
 html
-    head
-        title Reclone
-    body
-        each post, i in posts
-            p #{post.title}
-            p #{post.body}
+head
+ link(rel='stylesheet',type='text/css', href='/stylesheets/styles.css')
+ title Reclone
+body
+ each post, i in posts
+  div(id="post-container")
+   p #{post.title}
+   p #{post.body}
+   img.imageScr1(src=''+post.image)
