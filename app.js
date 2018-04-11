@@ -11,14 +11,25 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/views"));
 
 app.get("/", (req, res) => {
-   db.Post.find()
+   Post.find()
     .then(function(posts){
         res.json(posts);
     })
     .catch(function(err){
-        console.log(err);
+        res.send(err);
     })
  });
+
+ app.post("/post/new", (req, res) =>{
+     Post.create(req.body)
+      .then(function(newPost){
+          res.json(newPost);
+      })
+      .catch(function(err){
+          res.send(err);
+      })
+    });
+    
 
 app.listen(3000, () => {
     console.log("Running...")
