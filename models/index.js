@@ -1,6 +1,15 @@
 const mongoose = require("mongoose");
 mongoose.set("debug", true);
 mongoose.connect("mongodb://localhost/reclone");
+let db = mongoose.connection;
+
+db.once("open", () => {
+    console.log("Connected to Mongo");
+});
+
+db.on("error", () => {
+    console.log(err);
+})
 
 mongoose.Promise = Promise;
 
