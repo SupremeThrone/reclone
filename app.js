@@ -78,11 +78,11 @@ app.get("/post/:id/edit", (req, res) => {
       })
 })
 
-//EDIT post
-app.post("/post/:id/", (req, res) => {
+//EDIT put
+app.put("/post/:id/", (req, res) => {
     db.Post.findByIdAndUpdate(req.params.id, req.body.post)
       .then(() => {
-          res.redirect("/post/:id");
+          res.redirect("/post/" + req.params.id);
       })
        .catch(err => {
           console.log(err);
