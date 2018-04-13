@@ -1,11 +1,15 @@
+//Dependencies
 const express = require("express"),
+      app = express(),
       bodyParser = require("body-parser"),
       Post = require("./models/posts"),
       db = require("./models"),
       pug = require('pug'),
-      path = require("path")
+      path = require("path"),
+      methodOverride = require("method-override")
 
-const app = express();
+
+app.use(methodOverride('_method'))
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "pug");
 app.use(bodyParser.json());
@@ -22,8 +26,8 @@ app.get("/post/api", (req, res) => {
      })
      .catch(function(err){
          res.send(err);
-     })
-  });
+      })
+});
 
 //Index route that displays all the posts
 app.get("/", (req, res) => {
@@ -41,28 +45,50 @@ app.get("/post/new", (req, res) =>{
     res.render("posts/submit")
     
 })
-
-
- app.post("/post/new", (req, res) =>{
-    //  const title = req.post.title;
-    //  const body = req.post.body;
-    //  const image = req.post.image;
-
-    //  const createPost = {
-    //      title: title,
-    //      body: body,
-    //      image: image
-    //  }
-
-     Post.create(req.body.post)
+//NEW POST route
+app.post("/post/new", (req, res) =>{
+     db.Post.create(req.body.post)
       .then(function(newPost){
           res.json(newPost);
       })
       .catch(function(err){
           res.send(err);
       })
-    });
-    
+});
+
+//SHOW route
+app.get("/post/:id", (req, res) => {
+     db.Post.findById(req.params.id)
+      .then(function(displayPost){
+          res.render("posts/show", {displayPost: displayPost})
+      })
+      .catch(function(err){
+          console.log(err);
+      })
+})
+
+//EDIT, render edit page
+app.get("/post/:id/edit", (req, res) => {
+     db.Post.findById(req.params.id)
+      .then(function(editedPost){
+          res.render("posts/edit", {editedPost:editedPost})
+      })
+      .catch((err) => {
+          console.log(err);
+      })
+})
+
+//EDIT post
+app.post("/post/:id/", (req, res) => {
+    db.Post.findByIdAndUpdate(req.params.id, req.body.post)
+      .then(() => {
+          res.redirect("/post/:id");
+      })
+       .catch(err => {
+          console.log(err);
+       })
+})
+
 
 app.listen(3000, () => {
     console.log("Running...")

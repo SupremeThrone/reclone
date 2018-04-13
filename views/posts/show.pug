@@ -1,0 +1,13 @@
+doctype html
+html
+head
+ link(rel='stylesheet',type='text/css', href='/stylesheets/styles.css')
+ title Reclone
+body
+  div(id="post-container")
+   p #{displayPost.title}
+   p #{displayPost.body}
+   img.imageScr1(src=''+displayPost.image)
+   a(href="/post/" +displayPost._id + "/edit")
+    button(type="button") Edit
+   
