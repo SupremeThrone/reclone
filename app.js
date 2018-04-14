@@ -2,6 +2,10 @@
 const express = require("express"),
       app = express(),
       bodyParser = require("body-parser"),
+      http = require("http"),
+      mongoose = require("mongoose"),
+      passport = require("passport"),
+      LocalStrategy = require("passport-local").Strategy,
       Post = require("./models/posts"),
       db = require("./models"),
       pug = require('pug'),
@@ -17,43 +21,51 @@ app.use(bodyParser.urlencoded({extended: true}));
 //Path for CS
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + "/views"));
+app.use(express.session());
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Passport Set-up
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //API Route. Used for JS.
 app.get("/post/api", (req, res) => {
     db.Post.find()
-     .then(function(posts){
+      .then(function(posts){
          res.json(posts);
      })
-     .catch(function(err){
-         res.send(err);
-      })
+     .catch(err => {
+        console.log(err);
+     })
 });
 
 //Index route that displays all the posts
 app.get("/", (req, res) => {
     db.Post.find()
-     .then(function(posts){
+      .then(function(posts){
          res.render("index", {posts: posts})
      })
-      .catch(function(err){
-          console.log(err);
-      })
+     .catch(err => {
+        console.log(err);
+     })
 });
 
 //NEW GET route that displays the form for making a new post
 app.get("/post/new", (req, res) =>{
     res.render("posts/submit")
-    
-})
+});
+
 //NEW POST route
 app.post("/post/new", (req, res) =>{
      db.Post.create(req.body.post)
       .then(function(newPost){
           res.json(newPost);
       })
-      .catch(function(err){
-          res.send(err);
-      })
+     .catch(err => {
+        console.log(err);
+     })
 });
 
 //SHOW route
@@ -62,9 +74,9 @@ app.get("/post/:id", (req, res) => {
       .then(function(displayPost){
           res.render("posts/show", {displayPost: displayPost})
       })
-      .catch(function(err){
-          console.log(err);
-      })
+     .catch(err => {
+        console.log(err);
+     })
 })
 
 //EDIT, render edit page
@@ -73,9 +85,9 @@ app.get("/post/:id/edit", (req, res) => {
       .then(function(editedPost){
           res.render("posts/edit", {editedPost:editedPost})
       })
-      .catch((err) => {
-          console.log(err);
-      })
+     .catch(err => {
+        console.log(err);
+     }) 
 })
 
 //EDIT put
@@ -84,10 +96,21 @@ app.put("/post/:id/", (req, res) => {
       .then(() => {
           res.redirect("/post/" + req.params.id);
       })
-       .catch(err => {
-          console.log(err);
-       })
+     .catch(err => {
+        console.log(err);
+     })
 })
+
+//DELETE route
+app.delete("/post/:id", (req, res) => {
+    db.Post.findByIdAndRemove(req.params.id)
+      .then(() => {
+          res.redirect("/")
+      })
+     .catch(err => {
+         console.log(err);
+     })
+});
 
 
 app.listen(3000, () => {
