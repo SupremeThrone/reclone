@@ -13,6 +13,17 @@ const express = require("express"),
       methodOverride = require("method-override")
 
 
+
+app.use(require("express-session")({
+  secret: "Brown cat dog",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    maxAge: 360000
+    }
+}));
+
 app.use(methodOverride('_method'))
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "pug");
@@ -26,9 +37,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Passport Set-up
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 //API Route. Used for JS.
 app.get("/post/api", (req, res) => {
