@@ -123,6 +123,13 @@ app.delete("/post/:id", (req, res) => {
 });
 
 
+app.delete("/post/:id", (req, res) =>{
+    db.Post.findByIdAndRemove(req.params.id)
+      .then(() => {
+          res.redirect("/")
+      })
+})
+
 app.listen(3000, () => {
     console.log("Running...")
 })
