@@ -31,14 +31,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 //Path for CS
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + "/views"));
-app.use(express.session());
 app.use(passport.initialize());
 app.use(passport.session());
 
 //Passport Set-up
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 //API Route. Used for JS.
 app.get("/post/api", (req, res) => {
