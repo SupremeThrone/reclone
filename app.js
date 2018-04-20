@@ -1,19 +1,28 @@
 //Dependencies
 const express = require("express"),
-      app = express(),
+      app = express()
       bodyParser = require("body-parser"),
       http = require("http"),
       mongoose = require("mongoose"),
       passport = require("passport"),
       LocalStrategy = require("passport-local").Strategy,
       Post = require("./models/posts"),
+      User = require("./models/user")
       db = require("./models"),
       pug = require('pug'),
       path = require("path"),
-      methodOverride = require("method-override")
+      methodOverride = require("method-override"),
+      flash = require("connect-flash"),
+      
+      
+      
+      
 
 
 
+
+//Express-session
+//Make sure you require express-session and not just express
 app.use(require("express-session")({
   secret: "Brown cat dog",
   resave: false,
@@ -23,6 +32,7 @@ app.use(require("express-session")({
     maxAge: 360000
     }
 }));
+
 app.use(methodOverride('_method'))
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "pug");
@@ -31,13 +41,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 //Path for CS
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + "/views"));
+
 app.use(passport.initialize());
 app.use(passport.session());
-
-//Passport Set-up
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //API Route. Used for JS.
 app.get("/post/api", (req, res) => {
@@ -68,12 +77,13 @@ app.get("/post/new", (req, res) =>{
 
 //NEW POST route
 app.post("/post/new", (req, res) =>{
-     db.Post.create(req.body.post)
+    db.Post.create(req.body.post)
       .then(function(newPost){
           res.json(newPost);
+          
       })
      .catch(err => {
-        console.log(err);
+       
      })
 });
 
@@ -129,6 +139,39 @@ app.delete("/post/:id", (req, res) =>{
       })
 })
 
+
+///////////////////////////////////REGISTRATION
+
+app.get("/register", (req, res) => {
+    res.render("register")
+    
+})
+
+app.post("/register", (req, res) => {
+    let newUser = new User({
+        username: req.body.username,
+        email: req.body.email
+    })
+    User.register(newUser, req.body.password, function(err, user){
+        if(err){
+            console.log(err);
+            console.log(newUser)
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/")
+        })
+    })
+})
+
+
+
+
+
+
+
+
+
 app.listen(3000, () => {
     console.log("Running...")
 })
+

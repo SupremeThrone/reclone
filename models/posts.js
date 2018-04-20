@@ -1,9 +1,18 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-    title: String,
-    body: String,
-    image: String,
+    title:{
+        type: String,
+        required: true
+    },
+    body: {
+        type: String,
+        require: true
+    },
+    image:{
+        type: String,
+        required: true
+    },
     // author: {
     //     id: {
     //         type: mongoose.Schema.Types.ObjectId,
