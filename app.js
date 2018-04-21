@@ -71,12 +71,12 @@ app.get("/", (req, res) => {
 });
 
 //NEW GET route that displays the form for making a new post
-app.get("/post/new", (req, res) =>{
+app.get("/post/new", checkAuth, (req, res) =>{
     res.render("posts/submit")
 });
 
 //NEW POST route
-app.post("/post/new", (req, res) =>{
+app.post("/post/new", checkAuth, (req, res) =>{
     db.Post.create(req.body.post)
       .then(function(newPost){
           res.json(newPost);
@@ -99,7 +99,7 @@ app.get("/post/:id", (req, res) => {
 })
 
 //EDIT, render edit page
-app.get("/post/:id/edit", (req, res) => {
+app.get("/post/:id/edit", checkAuth, (req, res) => {
      db.Post.findById(req.params.id)
       .then(function(editedPost){
           res.render("posts/edit", {editedPost:editedPost})
@@ -110,7 +110,7 @@ app.get("/post/:id/edit", (req, res) => {
 })
 
 //EDIT put
-app.put("/post/:id/", (req, res) => {
+app.put("/post/:id/", checkAuth, (req, res) => {
     db.Post.findByIdAndUpdate(req.params.id, req.body.post)
       .then(() => {
           res.redirect("/post/" + req.params.id);
@@ -121,7 +121,7 @@ app.put("/post/:id/", (req, res) => {
 })
 
 //DELETE route
-app.delete("/post/:id", (req, res) => {
+app.delete("/post/:id", checkAuth, (req, res) => {
     db.Post.findByIdAndRemove(req.params.id)
       .then(() => {
           res.redirect("/")
@@ -132,7 +132,7 @@ app.delete("/post/:id", (req, res) => {
 });
 
 
-app.delete("/post/:id", (req, res) =>{
+app.delete("/post/:id", checkAuth, (req, res) =>{
     db.Post.findByIdAndRemove(req.params.id)
       .then(() => {
           res.redirect("/")
@@ -162,6 +162,22 @@ app.post("/register", (req, res) => {
         })
     })
 })
+
+app.get("/login", (req, res) => {
+    res.render("login");
+})
+
+app.post("/login", passport.authenticate("local"), (req, res) => {
+    res.redirect("/")
+})
+
+function checkAuth(req, res, next){
+    if(req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect("/login");
+    }
+}
 
 
 
