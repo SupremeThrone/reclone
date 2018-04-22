@@ -7,7 +7,8 @@ const express = require("express"),
       passport = require("passport"),
       LocalStrategy = require("passport-local").Strategy,
       Post = require("./models/posts"),
-      User = require("./models/user")
+      User = require("./models/user"),
+      Room = require("./models/rooms")
       db = require("./models"),
       pug = require('pug'),
       path = require("path"),
@@ -178,6 +179,33 @@ function checkAuth(req, res, next){
         res.redirect("/login");
     }
 }
+// *** ROOMS ***
+
+app.get("/r/create", (req, res) => {
+    res.render("rooms")
+})
+
+app.post("/r/create", (req, res) => {
+   const room =  req.body.room;
+   const description = req.body.description;
+   const resource = {room, description}
+    db.Room.create(resource)
+     .then((room) => {
+         res.json(room)
+     })
+})
+
+app.get("/r/api", (req, res) => {
+    db.Room.find()
+     .then((room) => {
+         res.json(room)
+     })
+})
+
+app.get("/r/:room", (req, res) => {
+    const room = req.params.room;
+    
+})
 
 
 
