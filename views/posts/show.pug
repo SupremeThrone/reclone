@@ -6,6 +6,7 @@ head
 body
   div(id="post-container")
    p #{displayPost.title}
+   p #{displayPost.author.username}
    p #{displayPost.body}
    img.imageScr1(src=''+displayPost.image)
    a(href="/post/" +displayPost._id + "/edit")

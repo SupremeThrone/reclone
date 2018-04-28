@@ -16,3 +16,4 @@ mongoose.Promise = Promise;
 //Get the posts schema for Promises functionality(?)
 module.exports.Post = require("./posts")
 module.exports.Room = require("./rooms")
+module.exports.User = require("./user")

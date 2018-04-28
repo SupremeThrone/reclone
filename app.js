@@ -14,6 +14,7 @@ const express = require("express"),
       path = require("path"),
       methodOverride = require("method-override"),
       flash = require("connect-flash"),
+      fetch = require("node-fetch")
       
       
       
@@ -72,19 +73,36 @@ app.get("/", (req, res) => {
 });
 
 //NEW GET route that displays the form for making a new post
-app.get("/post/new", checkAuth, (req, res) =>{
-    res.render("posts/submit")
+app.get("/r/:room/post/new", checkAuth, (req, res) =>{
+    const room = req.params.room
+    res.render("posts/submit", {room: room})
+    
 });
 
 //NEW POST route
-app.post("/post/new", checkAuth, (req, res) =>{
-    db.Post.create(req.body.post)
+app.post("/r/:room/post/new", checkAuth, (req, res) =>{
+    let title = req.body.post.title;
+    let body = req.body.post.body;
+    let image = req.body.post.image;
+    let author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    let room = req.body.post.room
+    let newPost = {
+        title: title,
+        body: body,
+        image: image,
+        author: author,
+        room: room
+    }
+    db.Post.create(newPost)
       .then(function(newPost){
           res.json(newPost);
           
       })
      .catch(err => {
-       
+       console.log(err)
      })
 });
 
@@ -206,6 +224,15 @@ app.get("/r/:room", (req, res) => {
     const room = req.params.room;
     
 })
+
+// app.get("/test", (req, res) => {
+//     
+    
+//     .catch((err) => {
+//         console.log(err);
+//     })
+// })
+
 
 
 
