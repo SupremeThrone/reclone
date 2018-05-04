@@ -72,12 +72,7 @@ app.get("/", (req, res) => {
      })
 });
 
-//NEW GET route that displays the form for making a new post
-app.get("/r/:room/post/new", checkAuth, (req, res) =>{
-    const room = req.params.room
-    res.render("posts/submit", {room: room})
-    
-});
+
 
 //NEW POST route
 app.post("/r/:room/post/new", checkAuth, (req, res) =>{
@@ -228,18 +223,39 @@ app.get("/r/:room", (req, res) => {
    note it has to be case-sensitive*/
     db.Room.find()
      .then(data => {
-        data.forEach(element => { 
-            if(element.room === room){
-                res.render("rooms/room", {room:data})
-                console.log(element.room)
-            }
-        });
-     })
-     .catch(err => {
-         console.log(err);
+         data.forEach(element => {
+             if(element.room === room){
+                 db.Room.find(element)
+                  .then(room => {
+                      res.render("rooms/room", {room: room})
+                  })
+                  .catch(err => {
+                      console.log(err);
+                  })
+             }
+         });
      })
     
 })
+
+//NEW GET route that displays the form for making a new post
+// app.get("/r/:room/post/new", checkAuth, (req, res) =>{
+//     const room = req.params.room
+//     db.Room.find()
+//      .then(found => {
+//         found.forEach(element => { 
+//             if(element.room === room){
+//                 res.render("posts/submit", {room: room})
+//             }
+//         });
+//      })
+//      .catch(err => {
+//          console.log(err);
+//      })
+    
+    
+// });
+
 // 
 // app.get("/test", (req, res) => {
 //     
