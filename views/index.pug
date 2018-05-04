@@ -9,11 +9,10 @@ body
 
  each post, i in posts
   div(id="post-container")
+   p #{post.room}
    p #{post.author}
    p #{post.title}
    p #{post.body}
    img.imageScr1(src=''+post.image)
    a(href="/post/" +post._id)
     button(type="button") View
- a(href="/post/new")
-  button(type="button") New Post

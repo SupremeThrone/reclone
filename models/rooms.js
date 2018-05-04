@@ -12,6 +12,7 @@ const roomSchema = new mongoose.Schema({
         type: String,
         
     },
+    
 });
 
 

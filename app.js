@@ -82,13 +82,14 @@ app.get("/r/:room/post/new", checkAuth, (req, res) =>{
 //NEW POST route
 app.post("/r/:room/post/new", checkAuth, (req, res) =>{
     let title = req.body.post.title;
+    let room = req.body.post.room;
     let body = req.body.post.body;
     let image = req.body.post.image;
     let author = {
         id: req.user._id,
         username: req.user.username
     }
-    let room = req.body.post.room
+   
     let newPost = {
         title: title,
         body: body,
@@ -221,10 +222,25 @@ app.get("/r/api", (req, res) => {
 })
 
 app.get("/r/:room", (req, res) => {
-    const room = req.params.room;
+   const room = req.params.room
+   /*Loop through the data callback so that we can
+   compare the objects to our room const which is in the url,
+   note it has to be case-sensitive*/
+    db.Room.find()
+     .then(data => {
+        data.forEach(element => { 
+            if(element.room === room){
+                res.render("rooms/room", {room:data})
+                console.log(element.room)
+            }
+        });
+     })
+     .catch(err => {
+         console.log(err);
+     })
     
 })
-
+// 
 // app.get("/test", (req, res) => {
 //     
     
